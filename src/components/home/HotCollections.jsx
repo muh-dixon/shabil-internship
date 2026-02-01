@@ -18,16 +18,26 @@ const PrevArrow = ({ onClick }) => {
 
 const NextArrow = ({ onClick }) => {
   return (
-    <button
-      className="carousel-arrow next"
-      onClick={onClick}
-      aria-label="Next"
-    >
+    <button className="carousel-arrow next" onClick={onClick} aria-label="Next">
       ›
     </button>
   );
 };
 
+const SkeletonCard = () => {
+  return (
+    <div className="nft_coll skeleton-card">
+      <div className="nft_wrap skeleton-img"></div>
+
+      <div className="nft_coll_pp skeleton-avatar"></div>
+
+      <div className="nft_coll_info">
+        <div className="skeleton-line title"></div>
+        <div className="skeleton-line subtitle"></div>
+      </div>
+    </div>
+  );
+};
 
 const HotCollections = () => {
   const [collections, setCollections] = useState([]);
@@ -37,11 +47,11 @@ const HotCollections = () => {
     async function fetchCollections() {
       try {
         const res = await fetch(
-          "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections"
+          "https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections",
         );
         const data = await res.json();
 
-        // Limit to 4 users
+      
         setCollections(data);
       } catch (err) {
         console.error("Failed to fetch collections", err);
@@ -54,26 +64,26 @@ const HotCollections = () => {
   }, []);
 
   const sliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  arrows: true,
-  prevArrow: <PrevArrow />,
-  nextArrow: <NextArrow />,
-  responsive: [
-    { breakpoint: 1200, settings: { slidesToShow: 3 } },
-    { breakpoint: 992, settings: { slidesToShow: 2 } },
-    {
-      breakpoint: 576,
-      settings: {
-        slidesToShow: 1,
-        arrows: false, // touch-friendly
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    arrows: true,
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
+    responsive: [
+      { breakpoint: 1200, settings: { slidesToShow: 3 } },
+      { breakpoint: 992, settings: { slidesToShow: 2 } },
+      {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1,
+          arrows: false, 
+        },
       },
-    },
-  ],
-};
+    ],
+  };
 
   return (
     <section id="section-collections" className="no-bottom">
@@ -88,7 +98,11 @@ const HotCollections = () => {
         </div>
 
         {loading ? (
-          <p className="text-center">Loading collections...</p>
+          <Slider {...sliderSettings}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </Slider>
         ) : (
           <Slider {...sliderSettings}>
             {collections.map((item) => (
@@ -108,10 +122,7 @@ const HotCollections = () => {
                     <Link to="/author">
                       <img
                         className="pp-coll"
-                        src={
-                          item.authorImage ||
-                          "/images/author_thumbnail.jpg"
-                        }
+                        src={item.authorImage || "/images/author_thumbnail.jpg"}
                         alt={item.authorName}
                       />
                     </Link>
