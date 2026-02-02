@@ -27,6 +27,31 @@ const NextArrow = ({ onClick }) => {
   );
 };
 
+const NewItemSkeleton = () => (
+  <div>
+    <div className="nft__item skeleton-card">
+      {/* Author avatar */}
+      <div className="author_list_pp">
+        <div className="skeleton-avatar"></div>
+      </div>
+
+      {/* Countdown */}
+      <div className="de_countdown skeleton-line"></div>
+
+      {/* NFT image */}
+      <div className="nft__item_wrap">
+        <div className="skeleton-img"></div>
+      </div>
+
+      {/* Info */}
+      <div className="nft__item_info">
+        <div className="skeleton-line title"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    </div>
+  </div>
+);
+
 const NewItems = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -95,7 +120,11 @@ const NewItems = () => {
         </div>
 
         {loading ? (
-          <p className="text-center">Loading items...</p>
+          <Slider {...settings}>
+            {[...Array(4)].map((_, i) => (
+              <NewItemSkeleton key={i} />
+            ))}
+          </Slider>
         ) : (
           <Slider {...settings}>
             {items.map((item) => (
