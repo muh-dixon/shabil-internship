@@ -1,21 +1,69 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const API_URL =
   "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems";
+
+const PrevArrow = ({ onClick }) => {
+  return (
+    <button
+      className="carousel-arrow prev"
+      onClick={onClick}
+      aria-label="Previous"
+    >
+      ‹
+    </button>
+  );
+};
+
+const NextArrow = ({ onClick }) => {
+  return (
+    <button className="carousel-arrow next" onClick={onClick} aria-label="Next">
+      ›
+    </button>
+  );
+};
+
+const NewItemSkeleton = () => (
+  <div>
+    <div className="nft__item skeleton-card">
+      {/* Author avatar */}
+      <div className="author_list_pp">
+        <div className="skeleton-avatar"></div>
+      </div>
+
+      {/* Countdown */}
+      <div className="de_countdown skeleton-line"></div>
+
+      {/* NFT image */}
+      <div className="nft__item_wrap">
+        <div className="skeleton-img"></div>
+      </div>
+
+      {/* Info */}
+      <div className="nft__item_info">
+        <div className="skeleton-line title"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    </div>
+  </div>
+);
 
 const NewItems = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [now, setNow] = useState(Date.now());
 
-  /* ---------------- FETCH DATA ---------------- */
+  /* ---------------- FETCH ---------------- */
   useEffect(() => {
     async function fetchItems() {
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
-        setItems(data.slice(0, 4));
+        setItems(data);
       } catch (err) {
         console.error("Failed to fetch new items", err);
       } finally {
@@ -26,6 +74,7 @@ const NewItems = () => {
     fetchItems();
   }, []);
 
+  /* ---------------- LIVE TIMER ---------------- */
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(Date.now());
@@ -36,54 +85,54 @@ const NewItems = () => {
 
   function getCountdown(expiryDate) {
     const diff = new Date(expiryDate).getTime() - now;
-
     if (diff <= 0) return "Expired";
 
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-    return `${hours}h ${minutes}m ${seconds}s`;
+    return `${h}h ${m}m ${s}s`;
   }
+
+  /* ---------------- CAROUSEL SETTINGS ---------------- */
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    arrows: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    responsive: [
+      { breakpoint: 1200, settings: { slidesToShow: 3 } },
+      { breakpoint: 992, settings: { slidesToShow: 2 } },
+      { breakpoint: 576, settings: { slidesToShow: 1 } },
+    ],
+  };
 
   return (
     <section id="section-items" className="no-bottom">
       <div className="container">
-        <div className="row">
-          <div className="col-lg-12 text-center">
-            <h2>New Items</h2>
-            <div className="small-border bg-color-2"></div>
-          </div>
+        <div className="text-center">
+          <h2>New Items</h2>
+          <div className="small-border bg-color-2"></div>
+        </div>
 
-          {/* ---------------- LOADING STATE ---------------- */}
-          {loading &&
-            new Array(4).fill(0).map((_, index) => (
-              <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
-                <div className="nft__item skeleton">
-                  <div className="nft__item_wrap skeleton-box"></div>
-                  <div className="nft__item_info">
-                    <div className="skeleton-line"></div>
-                    <div className="skeleton-line short"></div>
-                  </div>
-                </div>
-              </div>
+        {loading ? (
+          <Slider {...settings}>
+            {[...Array(4)].map((_, i) => (
+              <NewItemSkeleton key={i} />
             ))}
-
-          {/* ---------------- DATA MAP ---------------- */}
-          {!loading &&
-            items.map((item) => (
-              <div
-                className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
-                key={item.id}
-              >
+          </Slider>
+        ) : (
+          <Slider {...settings}>
+            {items.map((item) => (
+              <div key={item.id}>
                 <div className="nft__item">
                   {/* AUTHOR */}
                   <div className="author_list_pp">
-                    <Link
-                      to={`/author/${item.authorId}`}
-                      data-bs-toggle="tooltip"
-                      title={item.authorName}
-                    >
+                    <Link to={`/author/${item.authorId}`}>
                       <img src={item.authorImage} alt={item.authorName} />
                       <i className="fa fa-check"></i>
                     </Link>
@@ -127,7 +176,8 @@ const NewItems = () => {
                 </div>
               </div>
             ))}
-        </div>
+          </Slider>
+        )}
       </div>
     </section>
   );
