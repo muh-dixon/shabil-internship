@@ -13320,6 +13320,7 @@ a.read_more i {
   right: -20px;
 }
 
+
 @keyframes shimmer {
   0% {
     background-position: -500px 0;
@@ -13371,6 +13372,65 @@ a.read_more i {
   width: 60%;
   height: 16px;
 }
+/* AVATAR SKELETON */
+.skeleton-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+}
+
+/* TEXT SKELETON */
+.skeleton-line {
+  height: 14px;
+  width: 70%;
+  margin: 8px auto;
+}
+
+.skeleton-line.title {
+  width: 50%;
+  height: 16px;
+}
+
+/* RANK BADGE SKELETON */
+.skeleton-rank {
+  background: #ddd;
+}
+
+
+/* Top Sellers card layout override */
+#section-sellers .author_list {
+  display: flex;
+
+  padding: 16px 0;
+}
+
+/* Author image spacing */
+#section-sellers .author_list_pp {
+  margin-bottom: 10px;
+}
+
+/* Name + price stack */
+#section-sellers .author_list_info {
+  display: flex;
+  gap: 4px;
+}
+
+/* Author name */
+#section-sellers .author_list_info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Price */
+#section-sellers .author_list_info span {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+
+
 
 .author_list {
   -moz-column-count: 4;
@@ -13421,6 +13481,113 @@ a.read_more i {
   -webkit-border-radius: 100%;
   z-index: 2;
 }
+
+/* SELLER LIST */
+.top-sellers-list {
+  margin-top: 40px;
+}
+
+/* CARD */
+.top-seller-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 16px 20px; /* reduced */
+  text-align: center;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease;
+}
+
+.top-seller-card:hover {
+  transform: translateY(-3px);
+}
+
+
+/* RANK BADGE */
+.rank-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #8364e2;
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+
+/* AVATAR */
+.seller-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 16px;
+}
+
+/* INFO STACK */
+.seller-info h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.seller-info span {
+  font-size: 14px;
+  color: #777;
+}
+
+/* AVATAR WRAPPER */
+.avatar-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+/* AVATAR */
+.seller-avatar {
+  width: 72px; /* smaller */
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* RANK BADGE */
+.rank-badge {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #8364e2;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.rank-1 {
+  background: linear-gradient(135deg, #f5c542, #d4af37);
+}
+
+.rank-2 {
+  background: linear-gradient(135deg, #d9d9d9, #bfc1c2);
+}
+
+.rank-3 {
+  background: linear-gradient(135deg, #cd7f32, #b87333);
+}
+
+
 
 .de-pp-group a {
   position: absolute;
