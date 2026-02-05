@@ -13429,6 +13429,59 @@ a.read_more i {
   opacity: 0.85;
 }
 
+/* =========================
+   EXPLORE FLEX GRID
+========================= */
+
+.explore-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.explore-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+/* Desktop */
+.explore-card {
+  flex: 1 1 calc(25% - 24px);
+  max-width: calc(25% - 24px);
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .explore-card {
+    flex: 1 1 calc(50% - 24px);
+    max-width: calc(50% - 24px);
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .explore-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+/* Card */
+.explore-card .nft__item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  transition: transform 0.25s ease;
+}
+
+.explore-card .nft__item:hover {
+  transform: translateY(-6px);
+}
 
 
 

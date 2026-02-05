@@ -1,79 +1,146 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
-import nftImage from "../../images/nftImage.jpg";
+
+const API_BASE =
+  "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore";
+
+const ITEMS_PER_LOAD = 8;
 
 const ExploreItems = () => {
-  return (
-    <>
-      <div>
-        <select id="filter-items" defaultValue="">
-          <option value="">Default</option>
-          <option value="price_low_to_high">Price, Low to High</option>
-          <option value="price_high_to_low">Price, High to Low</option>
-          <option value="likes_high_to_low">Most liked</option>
-        </select>
-      </div>
-      {new Array(8).fill(0).map((_, index) => (
-        <div
-          key={index}
-          className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
-          style={{ display: "block", backgroundSize: "cover" }}
-        >
-          <div className="nft__item">
-            <div className="author_list_pp">
-              <Link
-                to="/author"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-              >
-                <img className="lazy" src={AuthorImage} alt="" />
-                <i className="fa fa-check"></i>
-              </Link>
-            </div>
-            <div className="de_countdown">5h 30m 32s</div>
+  const [items, setItems] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD);
+  const [filter, setFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [now, setNow] = useState(Date.now());
 
-            <div className="nft__item_wrap">
-              <div className="nft__item_extra">
-                <div className="nft__item_buttons">
-                  <button>Buy Now</button>
-                  <div className="nft__item_share">
-                    <h4>Share</h4>
-                    <a href="" target="_blank" rel="noreferrer">
-                      <i className="fa fa-facebook fa-lg"></i>
-                    </a>
-                    <a href="" target="_blank" rel="noreferrer">
-                      <i className="fa fa-twitter fa-lg"></i>
-                    </a>
-                    <a href="">
-                      <i className="fa fa-envelope fa-lg"></i>
-                    </a>
+  /* ---------------- FETCH ---------------- */
+  useEffect(() => {
+    async function fetchItems() {
+      setLoading(true);
+      try {
+        const url = filter ? `${API_BASE}?filter=${filter}` : API_BASE;
+        const res = await fetch(url);
+        const data = await res.json();
+        setItems(data);
+        setVisibleCount(ITEMS_PER_LOAD);
+      } catch (err) {
+        console.error("Failed to fetch explore items", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchItems();
+  }, [filter]);
+
+  /* ---------------- TIMER ---------------- */
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  function getCountdown(expiryDate) {
+    const diff = expiryDate - now;
+    if (diff <= 0) return "Expired";
+
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    return `${h}h ${m}m ${s}s`;
+  }
+
+  function handleLoadMore() {
+    setVisibleCount((prev) => prev + ITEMS_PER_LOAD);
+  }
+
+  /* ---------------- RENDER ---------------- */
+  return (
+    <section id="section-items" className="no-bottom">
+      <div className="container">
+        {/* HEADER + FILTER */}
+        <div className="explore-header">
+          <h2>Explore Items</h2>
+
+          <select
+            id="filter-items"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="">Default</option>
+            <option value="price_low_to_high">Price, Low to High</option>
+            <option value="price_high_to_low">Price, High to Low</option>
+            <option value="likes_high_to_low">Most liked</option>
+          </select>
+        </div>
+
+        {/* GRID */}
+        <div className="explore-grid">
+          {loading &&
+            [...Array(8)].map((_, i) => (
+              <div key={i} className="explore-card skeleton-card">
+                <div className="skeleton-img"></div>
+                <div className="skeleton-line title"></div>
+                <div className="skeleton-line"></div>
+              </div>
+            ))}
+
+          {!loading &&
+            items.slice(0, visibleCount).map((item) => (
+              <div key={item.id} className="explore-card">
+                <div className="nft__item">
+                  {/* AUTHOR */}
+                  <div className="author_list_pp">
+                    <Link to={`/author/${item.authorId}`}>
+                      <img src={item.authorImage} alt="" />
+                      <i className="fa fa-check"></i>
+                    </Link>
+                  </div>
+
+                  {/* COUNTDOWN */}
+                  <div className="de_countdown">
+                    {getCountdown(item.expiryDate)}
+                  </div>
+
+                  {/* IMAGE */}
+                  <div className="nft__item_wrap">
+                    <Link to={`/item/${item.nftId}`}>
+                      <img
+                        src={item.nftImage}
+                        className="nft__item_preview"
+                        alt={item.title}
+                      />
+                    </Link>
+                  </div>
+
+                  {/* INFO */}
+                  <div className="nft__item_info">
+                    <Link to={`/item/${item.nftId}`}>
+                      <h4>{item.title}</h4>
+                    </Link>
+
+                    <div className="nft__item_price">{item.price} ETH</div>
+
+                    <div className="nft__item_like">
+                      <i className="fa fa-heart"></i>
+                      <span>{item.likes}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <Link to="/item-details">
-                <img src={nftImage} className="lazy nft__item_preview" alt="" />
-              </Link>
-            </div>
-            <div className="nft__item_info">
-              <Link to="/item-details">
-                <h4>Pinky Ocean</h4>
-              </Link>
-              <div className="nft__item_price">1.74 ETH</div>
-              <div className="nft__item_like">
-                <i className="fa fa-heart"></i>
-                <span>69</span>
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
-      ))}
-      <div className="col-md-12 text-center">
-        <Link to="" id="loadmore" className="btn-main lead">
-          Load more
-        </Link>
+
+        {/* LOAD MORE */}
+        {!loading && visibleCount < items.length && (
+          <div className="text-center mt-4">
+            <button className="btn-main lead" onClick={handleLoadMore}>
+              Load more
+            </button>
+          </div>
+        )}
       </div>
-    </>
+    </section>
   );
 };
 

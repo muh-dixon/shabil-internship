@@ -23,18 +23,13 @@ const Explore = () => {
                 <div className="col-md-12 text-center">
                   <h1>Explore</h1>
                 </div>
-                <div className="clearfix"></div>
               </div>
             </div>
           </div>
         </section>
 
-        <section aria-label="section">
-          <div className="container">
-            <div className="row">
-              <ExploreItems />
-            </div>
-          </div>
+        <section aria-label="explore-items">
+          <ExploreItems />
         </section>
       </div>
     </div>
