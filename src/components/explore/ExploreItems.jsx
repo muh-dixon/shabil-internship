@@ -31,7 +31,7 @@ const ExploreItems = () => {
     }
 
     fetchItems();
-  }, [filter]);
+  }, [filter]); 
 
   /* ---------------- TIMER ---------------- */
   useEffect(() => {
