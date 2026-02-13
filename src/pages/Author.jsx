@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import AuthorItems from "../components/author/AuthorItems";
 import AuthorBanner from "../images/author_banner.jpg";
 
-const shortenAddress = (addr) =>
-  `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+const shortenAddress = (addr) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
 const Author = () => {
   const { authorId } = useParams();
@@ -16,7 +15,7 @@ const Author = () => {
     async function fetchAuthor() {
       try {
         const res = await fetch(
-          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`
+          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`,
         );
         const data = await res.json();
         setAuthor(data);
@@ -31,7 +30,64 @@ const Author = () => {
   }, [authorId]);
 
   if (loading) {
-    return <div className="container text-center">Loading author...</div>;
+    return (
+      <div id="wrapper">
+        <div className="no-bottom no-top" id="content">
+          {/* Banner Skeleton */}
+          <section
+            id="profile_banner"
+            className="text-light"
+            style={{ background: "#e0e0e0", height: "300px" }}
+          />
+
+          <section>
+            <div className="container">
+              <div className="row">
+                {/* Profile Header Skeleton */}
+                <div className="col-md-12">
+                  <div className="d_profile de-flex">
+                    <div className="de-flex-col">
+                      <div className="profile_avatar text-center">
+                        <div className="skeleton-avatar"></div>
+
+                        <div className="profile_name text-center mt-3">
+                          <div className="skeleton-line title"></div>
+                          <div className="skeleton-line"></div>
+                          <div className="skeleton-line"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="profile_follow de-flex">
+                      <div className="de-flex-col text-center">
+                        <div className="skeleton-line title"></div>
+                        <div className="skeleton-line"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Author NFTs Skeleton Grid */}
+                <div className="col-md-12">
+                  <div className="row mt-4">
+                    {[...Array(4)].map((_, index) => (
+                      <div className="col-lg-3 col-md-6 col-sm-6" key={index}>
+                        <div className="nft__item skeleton-card">
+                          <div className="skeleton-img"></div>
+                          <div className="skeleton-line title"></div>
+                          <div className="skeleton-line"></div>
+                          <div className="skeleton-line"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
   }
 
   if (!author) {
@@ -41,7 +97,6 @@ const Author = () => {
   return (
     <div id="wrapper">
       <div className="no-bottom no-top" id="content">
-
         {/* ✅ AUTHOR BANNER */}
         <section
           id="profile_banner"
@@ -52,7 +107,6 @@ const Author = () => {
         <section>
           <div className="container">
             <div className="row">
-
               {/* PROFILE HEADER */}
               <div className="col-md-12">
                 <div className="d_profile de-flex">
@@ -90,7 +144,7 @@ const Author = () => {
                       </div>
                       <button
                         className="btn-main"
-                        onClick={() => setFollowing(f => !f)}
+                        onClick={() => setFollowing((f) => !f)}
                       >
                         {following ? "Unfollow" : "Follow"}
                       </button>
@@ -105,11 +159,9 @@ const Author = () => {
                   <AuthorItems
                     items={author.nftCollection}
                     authorImage={author.authorImage}
-                    authorName={author.authorName}
                   />
                 </div>
               </div>
-
             </div>
           </div>
         </section>

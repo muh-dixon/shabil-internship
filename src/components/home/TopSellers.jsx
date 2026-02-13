@@ -8,18 +8,40 @@ const TopSellerSkeleton = () => {
   return (
     <div className="col-lg-3 col-md-4 col-sm-6 col-xs-12">
       <div className="top-seller-card skeleton-card">
-        {/* Avatar Skeleton */}
+        {/* AVATAR + RANK WRAPPER */}
         <div className="avatar-wrap">
-          <div className="skeleton-avatar"></div>
+          <div
+            className="skeleton-avatar"
+            style={{
+              width: "72px",
+              height: "72px",
+              margin: "0",
+            }}
+          ></div>
 
-          {/* Rank Skeleton */}
-          <div className="rank-badge skeleton-rank"></div>
+          {/* Rank Badge Skeleton */}
+          <div
+            className="rank-badge skeleton-rank"
+            style={{
+              top: "-6px",
+              left: "-6px",
+              width: "28px",
+              height: "28px",
+              borderRadius: "50%",
+            }}
+          ></div>
         </div>
 
-        {/* Info Skeleton */}
+        {/* INFO */}
         <div className="seller-info">
-          <div className="skeleton-line title"></div>
-          <div className="skeleton-line"></div>
+          <div
+            className="skeleton-line title"
+            style={{ width: "60%", margin: "10px auto 6px" }}
+          ></div>
+          <div
+            className="skeleton-line"
+            style={{ width: "40%", margin: "0 auto" }}
+          ></div>
         </div>
       </div>
     </div>

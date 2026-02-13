@@ -3,8 +3,25 @@ import { Link } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 4;
 
-const AuthorItems = ({ items = [], authorImage }) => {
+const AuthorItems = ({ items = [], authorImage, loading }) => {
   const [visible, setVisible] = useState(ITEMS_PER_PAGE);
+
+  if (loading) {
+    return (
+      <div className="row">
+        {[...Array(4)].map((_, index) => (
+          <div className="col-lg-3 col-md-6 col-sm-6" key={index}>
+            <div className="nft__item skeleton-card">
+              <div className="skeleton-img"></div>
+              <div className="skeleton-line title"></div>
+              <div className="skeleton-line"></div>
+              <div className="skeleton-line"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="row">
@@ -15,7 +32,7 @@ const AuthorItems = ({ items = [], authorImage }) => {
               <img src={authorImage} alt="Author" />
               <i className="fa fa-check"></i>
             </div>
-            
+
             {/* NFT IMAGE */}
             <div className="nft__item_wrap">
               <div className="nft__item_extra">
